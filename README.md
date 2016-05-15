@@ -1,5 +1,6 @@
 ### [updates:]
 2016.05.10 : Fix C style pointer MEM Error potential, use const & instead
+
 2016.05.15 : Improve Calc speed
 
 # Faster RNNLM (HS/NCE) toolkit
