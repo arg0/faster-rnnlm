@@ -25,7 +25,7 @@ static const uint64_t PRIMES_SIZE = sizeof(PRIMES) / sizeof(PRIMES[0]);
 // Return the number of indices filled (maybe less than maxent_order
 // for a few first sentence words if add_padding is false)
 int CalculateMaxentHashIndices(
-    const WordIndex *sen, int word_index,
+    const std::vector<WordIndex> & sen, int word_index,
     int maxent_order, uint64_t max_hash_index,
     bool add_padding,
     uint64_t ngram_hashes[MAX_NGRAM_ORDER]);
@@ -119,7 +119,7 @@ class MaxEnt {
 
 
 inline int CalculateMaxentHashIndices(
-    const WordIndex *sen, int word_index,
+    const std::vector<WordIndex> & sen, int word_index,
     int maxent_order, uint64_t max_hash,
     bool add_padding,
     uint64_t ngram_hashes[MAX_NGRAM_ORDER]) {

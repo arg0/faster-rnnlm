@@ -100,7 +100,7 @@ class SentenceReader : public WordReader {
   bool Read();
 
   // Returns pointer to the last read sentence
-  const WordIndex* sentence() const { return sen_; }
+  const std::vector<WordIndex> & sentence() const { return sen_; }
 
   // Returns the length of the last read sentence
   int sentence_length() const { return sentence_length_; }
@@ -122,7 +122,7 @@ class SentenceReader : public WordReader {
 
   int sentence_length_;
   int64_t sentence_id_;
-  WordIndex sen_[MAX_SENTENCE_WORDS + 1];
+  std::vector<WordIndex> sen_;
   const Vocabulary& vocab_;
   const WordIndex unk_word_;
   bool reverse_;

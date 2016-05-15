@@ -316,6 +316,7 @@ SentenceReader::SentenceReader(
     , done_(false)
     , oov_occured_(false)
 {
+  sen_.resize(MAX_SENTENCE_WORDS + 1);
   if (auto_insert_unk && unk_word_ == Vocabulary::kWordOOV) {
     fprintf(stderr, "Cannot use auto_insert_unk as '<unk>' is not found in the vocabulary\n");
     exit(1);

@@ -150,7 +150,7 @@ void NCE::UploadNetWeightsToCuda(const MaxEnt* maxent) {
 void NCE::CalculateLog10ProbabilityBatch(
     const Ref<const RowMatrix> hidden_layers, const MaxEnt* maxent,
     const uint64_t* maxent_indices_all, const int* maxent_indices_count_all,
-    const WordIndex* sentence, int sentence_length,
+    const std::vector<WordIndex> & sentence, int sentence_length,
     const bool do_not_normalize,
     std::vector<Real>* logprob_per_pos) {
 
@@ -274,7 +274,7 @@ UnigramNoiseGenerator::UnigramNoiseGenerator(
 }
 
 uint64_t UnigramNoiseGenerator::PrepareNoiseSample(
-    uint64_t random_state, int n_samples, const WordIndex* sen, int sen_pos,
+    uint64_t random_state, int n_samples, const std::vector<WordIndex> & sen, int sen_pos,
     NoiseSample* sample) const {
   if (n_samples > kMaxNoiseSamples) {
     fprintf(stderr, "ERROR: Cannot use more then %d noise samples!\n", kMaxNoiseSamples);
@@ -308,7 +308,7 @@ HSMaxEntNoiseGenerator::HSMaxEntNoiseGenerator(
 
 
 uint64_t HSMaxEntNoiseGenerator::PrepareNoiseSample(
-    uint64_t random_state, int n_samples, const WordIndex* sen, int sen_pos,
+    uint64_t random_state, int n_samples, const std::vector<WordIndex> & sen, int sen_pos,
     NoiseSample* sample) const {
   if (n_samples > kMaxNoiseSamples) {
     fprintf(stderr, "ERROR: Cannot use more then %d negative samples!\n", kMaxNoiseSamples);

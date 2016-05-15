@@ -31,7 +31,7 @@ else
     if [ ! -f "eigen.$fname" ]; then
       if ! wget_or_curl "http://bitbucket.org/eigen/eigen/get/$fname" eigen.$fname; then
           echo "Failed to download $fname"
-          rm -f eigen.$fname
+          #rm -f eigen.$fname
           exit 1
       fi
     fi
@@ -39,7 +39,7 @@ else
     tar -xjf eigen.$fname  || exit 1;
     folder_name=$(tar -tjf eigen.$fname | sed 's/^[./]*//' | head -n 1 | cut -d/ -f 1)
     mv -v $folder_name $dst_folder
-    rm -f eigen.$fname
+    #rm -f eigen.$fname
 fi
 
 cd faster-rnnlm

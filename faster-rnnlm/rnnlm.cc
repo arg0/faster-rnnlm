@@ -114,14 +114,14 @@ struct SimpleTimer {
 // Fill ngram_hashes with indices of maxent hashes for given position in the sentence
 // Returns number of indices
 inline int CalculateMaxentHashIndices(
-    const NNet* nnet, const WordIndex* sen, int pos, uint64_t* ngram_hashes) {
+    const NNet* nnet, const std::vector<WordIndex> & sen, int pos, uint64_t* ngram_hashes) {
   int maxent_present = CalculateMaxentHashIndices(
     sen, pos, nnet->cfg.maxent_order, nnet->cfg.maxent_hash_size - nnet->vocab.size(),
     kMaxentAddPadding, ngram_hashes);
   return maxent_present;
 }
 
-inline void PropagateForward(NNet* nnet, const WordIndex* sen, int sen_length, IRecUpdater* layer) {
+inline void PropagateForward(NNet* nnet, const std::vector<WordIndex> & sen, int sen_length, IRecUpdater* layer) {
   RowMatrix& input = layer->GetInputMatrix();
   for (int i = 0; i < sen_length; ++i) {
     input.row(i) = nnet->embeddings.row(sen[i]);
@@ -160,7 +160,7 @@ Real EvaluateLM(NNet* nnet, const std::string& filename, bool print_logprobs, bo
         continue;
     }
 
-    const WordIndex* sen = reader.sentence();
+    const std::vector<WordIndex> & sen = reader.sentence();
     int seq_length = reader.sentence_length();
     Real sen_logprob = 0.0;
 
@@ -259,7 +259,7 @@ void *RunThread(void *ptr) {
 
     // A sentence contains <s>, followed by (seq_length - 1) actual words, followed by </s>
     // Both <s> and </s> are mapped to zero
-    const WordIndex* sen = reader.sentence();
+    const std::vector<WordIndex> & sen = reader.sentence();
     const int seq_length = reader.sentence_length();
 
     // Compute hidden layer for all words
@@ -508,7 +508,7 @@ void SampleFromLM(NNet* nnet, int seed, int n_samples, Real generate_temperature
 
   std::vector<double> probs(nnet->vocab.size());
   IRecUpdater* updater = nnet->rec_layer->CreateUpdater();
-  PropagateForward(nnet, wids.data(), wids.size(), updater);
+  PropagateForward(nnet, wids, wids.size(), updater);
   for (int sample_idx = 0; sample_idx < n_samples; ++sample_idx) {
     for (size_t i = 0; i < wids.size(); ++i) {
       printf("%s ", nnet->vocab.GetWordByIndex(wids[i]));
@@ -530,7 +530,7 @@ void SampleFromLM(NNet* nnet, int seed, int n_samples, Real generate_temperature
           sen.back() = wid;
           uint64_t ngram_hashes[MAX_NGRAM_ORDER];
           bool kDynamicMaxentPruning = false;
-          int maxent_present = CalculateMaxentHashIndices(nnet, sen.data(), target, ngram_hashes);
+          int maxent_present = CalculateMaxentHashIndices(nnet, sen, target, ngram_hashes);
           probs[wid] = pow(10., nnet->softmax_layer->CalculateLog10Probability(
               sen[target], ngram_hashes, maxent_present, kDynamicMaxentPruning,
               output.row(target - 1).data(), &nnet->maxent_layer) / generate_temperature);
@@ -540,7 +540,7 @@ void SampleFromLM(NNet* nnet, int seed, int n_samples, Real generate_temperature
         for (int wid = 0; wid < nnet->vocab.size(); ++wid) {
           sen.back() = wid;
           uint64_t ngram_hashes[MAX_NGRAM_ORDER];
-          int maxent_present = CalculateMaxentHashIndices(nnet, sen.data(), target, ngram_hashes);
+          int maxent_present = CalculateMaxentHashIndices(nnet, sen, target, ngram_hashes);
           probs[wid] = exp(nnet->nce->CalculateWordLnScore(
               output.row(target - 1), &nnet->maxent_layer,
               ngram_hashes, maxent_present,

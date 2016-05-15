@@ -13,6 +13,8 @@ data=$basedir/simple-examples/data
 hidden_size=$1
 threads=$2
 
+tar zxvf benchmarks.tgz
+
 taskset_cmd="taskset -c $(seq -s, 0 $(( $threads - 1 )))"
 mkdir -p $basedir
 
@@ -53,11 +55,11 @@ fi
 
 fat_echo "Downloading and building C-RNNLM from rnnlm.org"
 if [ ! -f "$basedir/crnnlm/rnnlm" ]; then
-    rm -rf $basedir/crnnlm
+    #rm -rf $basedir/crnnlm
     mkdir -p $basedir/crnnlm
     (
         cd $basedir/crnnlm
-        wget_or_curl https://f25ea9ccb7d3346ce6891573d543960492b92c30.googledrive.com/host/0ByxdPXuxLPS5RFM5dVNvWVhTd0U/rnnlm-0.4b.tgz rnnlm-0.4b.tgz
+        #wget_or_curl https://f25ea9ccb7d3346ce6891573d543960492b92c30.googledrive.com/host/0ByxdPXuxLPS5RFM5dVNvWVhTd0U/rnnlm-0.4b.tgz rnnlm-0.4b.tgz
         tar -xf rnnlm-0.4b.tgz
         cd rnnlm-0.4b
         sed -i -- 's/x86_64-linux-g++-4.6/g++/g' makefile

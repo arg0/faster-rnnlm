@@ -64,7 +64,7 @@ class NCE {
     void CalculateLog10ProbabilityBatch(
         const Ref<const RowMatrix> hidden_layers, const MaxEnt* maxent,
         const uint64_t* maxent_indices_all, const int* maxent_indices_count_all,
-        const WordIndex* sentence, int sentence_length,
+        const std::vector<WordIndex> & sentence, int sentence_length,
         const bool do_not_normalize,
         std::vector<Real>* logprob_per_pos);
 
@@ -99,7 +99,7 @@ class NCE {
 class INoiseGenerator {
  public:
     virtual uint64_t PrepareNoiseSample(
-        uint64_t random_state, int n_samples, const WordIndex* sen,
+        uint64_t random_state, int n_samples, const std::vector<WordIndex> & sen,
         int sen_pos, NoiseSample* sample) const = 0;
 
     virtual ~INoiseGenerator() {}
@@ -111,7 +111,7 @@ class UnigramNoiseGenerator : public INoiseGenerator {
     UnigramNoiseGenerator(const Vocabulary& vocab, Real noise_power, Real noise_min_cell);
 
     virtual uint64_t PrepareNoiseSample(
-        uint64_t random_state, int n_samples, const WordIndex* sen,
+        uint64_t random_state, int n_samples, const std::vector<WordIndex> & sen,
         int sen_pos, NoiseSample* sample) const;
 
 
@@ -132,7 +132,7 @@ class HSMaxEntNoiseGenerator : public INoiseGenerator {
         uint64_t maxent_hash_size, int vocab_size, int maxent_order);
 
     virtual uint64_t PrepareNoiseSample(
-        uint64_t random_state, int n_samples, const WordIndex* sen,
+        uint64_t random_state, int n_samples, const std::vector<WordIndex> & sen,
         int sen_pos, NoiseSample* sample) const;
 
 
