@@ -1,3 +1,7 @@
+### [updates:]
+2016.05.10 : Fix C style pointer MEM Error potential, use const & instead
+2016.05.15 : Improve Calc speed
+
 # Faster RNNLM (HS/NCE) toolkit
 In a nutshell, the goal of this project is to create an rnnlm implementation that can be trained on huge datasets (several billions of words) and very large vocabularies (several hundred thousands) and used in real-world ASR and MT problems.
 Besides, to achieve better results this implementation supports such praised setups as ReLU+DiagonalInitialization [1], GRU [2], NCE [3], and RMSProp [4].
